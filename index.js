@@ -1,47 +1,43 @@
-const { listContacts, getContactById } = require('./contacts')
+const { listContacts, getContactById, removeContact, addContact } = require('./contacts')
 
+const { Command } = require("commander");
+const program = new Command();
+program
+  .option("-a, --action <type>", "choose action")
+  .option("-i, --id <type>", "user id")
+  .option("-n, --name <type>", "user name")
+  .option("-e, --email <type>", "user email")
+  .option("-p, --phone <type>", "user phone");
 
-// listContacts();
-// getContactById(3)
+program.parse(process.argv);
 
-// const { Command } = require("commander");
-// const program = new Command();
-// program
-//   .option("-a, --action <type>", "choose action")
-//   .option("-i, --id <type>", "user id")
-//   .option("-n, --name <type>", "user name")
-//   .option("-e, --email <type>", "user email")
-//   .option("-p, --phone <type>", "user phone");
+const argv = program.opts();
 
-// program.parse(process.argv);
+// TODO: рефакторить
+function invokeAction({ action, id, name, email, phone }) {
+  switch (action) {
+    case "list":
+          listContacts().then(data => console.log(data)).catch(err => console.error(err));
+      break;
 
-// const argv = program.opts();
+    case "get":
+      getContactById(id).then(data => console.log(data)).catch(err => console.error(err))
+      break;
 
-// // TODO: рефакторить
-// function invokeAction({ action, id, name, email, phone }) {
-//   switch (action) {
-//     case "list":
-//       // ...
-//       break;
+    case "add":
+      addContact(name, email, phone).then(data => console.log(data)).catch(err => console.error(err));
+      break;
 
-//     case "get":
-//       // ... id
-//       break;
+    case "remove":
+      removeContact(id).then(data => console.log(data)).catch(err => console.error(err));
+      break;
 
-//     case "add":
-//       // ... name email phone
-//       break;
+    default:
+      console.warn("\x1B[31m Unknown action type!");
+  }
+}
 
-//     case "remove":
-//       // ... id
-//       break;
-
-//     default:
-//       console.warn("\x1B[31m Unknown action type!");
-//   }
-// }
-
-// invokeAction(argv);
+invokeAction(argv);
 
 
 

@@ -36,7 +36,7 @@ async function removeContact(contactId) {
     const newContacts = contacts.filter(el => String(el.id) !== String(contactId));
     await fs.writeFile(contactsPath, JSON.stringify(newContacts), 'utf8');
     // console.table(newContacts);
-    console.log(deletedContact);
+    // console.log(deletedContact);
     return deletedContact;
 }
 // removeContact(1);
@@ -51,12 +51,14 @@ async function addContact(name, email, phone) {
     // console.table(newContacts);
     // await fs.appendFile( contactsPath, JSON.stringify(newContact) )
     await fs.writeFile(contactsPath, JSON.stringify(contacts));
-    console.log(newContact);
+    // console.log(newContact);
+    return newContact;
 }
 // addContact('testname', 'testemail', 'testphone');
 
 module.exports = {
     listContacts,
-    getContactById
-
+    getContactById,
+    removeContact,
+    addContact
 }
