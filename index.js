@@ -1,3 +1,4 @@
+var colors = require('colors');
 const { listContacts, getContactById, removeContact, addContact } = require('./contacts')
 
 const { Command } = require("commander");
@@ -13,23 +14,38 @@ program.parse(process.argv);
 
 const argv = program.opts();
 
-// TODO: рефакторить
 function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
     case "list":
-          listContacts().then(data => console.log(data)).catch(err => console.error(err));
+          listContacts().then(data => console.table(data)).catch(err => console.error(err));
       break;
 
     case "get":
-      getContactById(id).then(data => console.log(data)).catch(err => console.error(err))
+      getContactById(id).then(data => {
+        if (data) {
+          console.log(colors.blue('Contact found!'));
+          console.log(data)
+        } else { 
+          console.log(colors.red('Contact not found'));
+        }
+      })
+        .catch(err => console.error(err))
       break;
 
     case "add":
-      addContact(name, email, phone).then(data => console.log(data)).catch(err => console.error(err));
+      addContact(name, email, phone).then(data => {
+        console.log(colors.blue('Contact added'));
+        console.log(data)
+      }).
+        catch(err => console.error(err));
       break;
 
     case "remove":
-      removeContact(id).then(data => console.log(data)).catch(err => console.error(err));
+      removeContact(id).then(data => {
+        console.log(colors.blue('Contact deleted'));
+        console.log(data)
+      })
+        .catch(err => console.error(err));
       break;
 
     default:
